@@ -10,14 +10,14 @@ dotenv.config();
 
 const app = express();
 
-app.use('/student', studentRoutes)
-
 app.use(bodyParser.json( {limit: '30mb', extended: true}));
 app.use(bodyParser.urlencoded( {limit: '30mb', extended: true}));
 app.use(cors());
 
 const port = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
+
+app.use('/student', studentRoutes)
 
 mongoose.connect(uri, {useNewUrlParser:true, useUnifiedTopology:true});
 mongoose.connection.once('open', ()=> {
