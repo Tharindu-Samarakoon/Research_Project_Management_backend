@@ -17,10 +17,15 @@ export const getStaff = async (req, res) => {
         }
 }
 
+
+
+
 export const addStaff = async (req, res) => {
 
     try {
         const user = await StaffDetails.findOne({email: req.body.email});
+
+        
 
         if(user) {
             return res.status(409).json({message: 'A user with the email already exists'});
@@ -28,8 +33,8 @@ export const addStaff = async (req, res) => {
         
         const salt = await bcrypt.genSalt(Number(process.env.SALT));
         const hashPassword = await bcrypt.hash( req.body.password, salt);
-        const {firstName, lastName, profilePicture, position, email, password, department, research_interest} = {...req.body, password: hashPassword};
-        const newStaff = new StaffDetails({firstName, lastName, profilePicture, position, email, password, department, research_interest});
+        const {firstName, lastName, profilePicture, position, email, password, department, research_interest,userType} = {...req.body, password: hashPassword};
+        const newStaff = new StaffDetails({firstName, lastName, profilePicture, position, email, password, department, research_interest,userType});
         
         await newStaff.save();
 
@@ -60,7 +65,7 @@ export const staffAuthentication = async (req, res) => {
         }
         console.log(user);
         const token = user.generateAuthToken();
-        res.status(200).json({data:token, messaged:'Logged In Successfully'});
+        res.status(200).json({data:{token: token, userType: user.userType }, messaged:'Logged In Successfully'});
 
     } catch (error) {
         res.status(401).json({message: error.message});
