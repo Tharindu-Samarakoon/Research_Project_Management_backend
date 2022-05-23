@@ -5,9 +5,11 @@ import Joi from "joi";
 const staffSchema = mongoose.Schema({
     firstName: String,
     lastName: String,
+    profilePicture: String,
     email: String,
     password: String,
-    Department: String,
+    department: String,
+    position: String,
     research_interest: String
 });
 
@@ -16,7 +18,7 @@ staffSchema.methods.generateAuthToken = function() {
     return token;
 };
 
-const StaffDetails = mongoose.model('StuffDetails', staffSchema);
+const StaffDetails = mongoose.model('StaffDetails', staffSchema);
 
 export const validate = (data) => {
     const schema = Joi.object({
@@ -29,3 +31,15 @@ export const validate = (data) => {
 }
 
 export default StaffDetails;
+
+//firstName, lastName, profilePicture, email, password, Department, research_interest
+
+// {
+//     "firstName": "Ashan", 
+//     "lastName":"Ekanayaka",
+//      "profilePicture":"Mahinda",
+//       "email":"it20265895@my.sliit.lk",
+//        "password":"4bbnruf",
+//         "department":"computer",
+//          "research_interest":"PHP"
+// }
