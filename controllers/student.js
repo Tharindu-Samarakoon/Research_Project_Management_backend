@@ -1,7 +1,7 @@
 import StudentDetails from "../models/studentDetails.js";
 import bcrypt from 'bcrypt';
 
-export const getStudnet = async (req, res) => {
+export const getStudent = async (req, res) => {
         try{
             const studentDetails = await StudentDetails.find();
 
