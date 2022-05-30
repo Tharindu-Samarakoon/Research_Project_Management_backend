@@ -9,7 +9,8 @@ const studentSchema = mongoose.Schema({
     email: String,
     password: String,
     profilePicture: String,
-    group: String
+    group: String,
+    contactNumber: String
 });
 
 studentSchema.methods.generateAuthToken = function() {

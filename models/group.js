@@ -5,6 +5,7 @@ const groupSchema = mongoose.Schema({
     topic: String,
     supervisor: String,
     coSupervisor: String,
+    topicStatus: String
 });
 
 const group = mongoose.model('staffDetails', groupSchema);
