@@ -9,7 +9,7 @@ const staffSchema = mongoose.Schema({
     email: String,
     password: String,
     department: String,
-    position: String,
+    role: String,
     research_interest: String,
     userType: String
 });

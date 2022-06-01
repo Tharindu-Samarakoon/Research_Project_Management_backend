@@ -31,14 +31,14 @@ export const getStaff = async (req, res) => {
 
 export const updateStaff = async (req,res) =>{
     const {id} = req.params;
-    const {firstName, lastName, profilePicture, email, password, department, research_interest,userType} = req.body;
+    const {firstName, lastName, profilePicture, email, password, department,role, research_interest,userType} = req.body;
 
 
     if(!mongoose.Types.ObjectId.isValid(id)){
         return res.status(404).send(`No Staff member with the given ID`);
     }
 
-const updatedStaff = {firstName, lastName, profilePicture, email, password, department, research_interest,userType, _id: id};
+const updatedStaff = {firstName, lastName, profilePicture, email, password, department,role, research_interest,userType, _id: id};
 await StaffDetails.findByIdAndUpdate(id, updatedStaff, {new: true});
 res.json(updatedStaff);
 
@@ -58,8 +58,8 @@ export const addStaff = async (req, res) => {
         
         const salt = await bcrypt.genSalt(Number(process.env.SALT));
         const hashPassword = await bcrypt.hash( req.body.password, salt);
-        const {firstName, lastName, profilePicture, position, email, password, department, research_interest,userType} = {...req.body, password: hashPassword};
-        const newStaff = new StaffDetails({firstName, lastName, profilePicture, position, email, password, department, research_interest,userType});
+        const {firstName, lastName, profilePicture, role, email, password, department, research_interest,userType} = {...req.body, password: hashPassword};
+        const newStaff = new StaffDetails({firstName, lastName, profilePicture, role, email, password, department, research_interest,userType});
         
         await newStaff.save();
 
