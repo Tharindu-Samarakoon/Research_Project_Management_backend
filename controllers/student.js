@@ -84,7 +84,7 @@ export const setGroup = async (studentID, groupID) => {
 
 export const getStudentsOfGroup = async (req, res) => {
     try {
-        const groupID = req.params;
+        const {groupID} = req.params;
         const students = await StudentDetails.find({group: groupID});
         res.status(200).json(students);
     } catch(error) {
