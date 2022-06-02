@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import group from "../models/group.js";
-import group from "../models/group.js";
 
 export const addGroup = async (req, res) => {
     const {leader, topic, supervisor, coSupervisor} = req.body;
@@ -12,6 +11,16 @@ export const addGroup = async (req, res) => {
         res.status(201).json({data:newGroup._id});
     } catch (error) {
         res.status(409).json({message: error.message});
+    }
+}
+
+export const getGroup = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const selectGroup = await group.findById(id);
+        res.status(200).json(selectGroup);
+    } catch (error) {
+        res.status(404).json({message: error.message});
     }
 }
 
