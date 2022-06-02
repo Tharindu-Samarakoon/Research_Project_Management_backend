@@ -5,8 +5,9 @@ const groupSchema = mongoose.Schema({
     topic: String,
     supervisor: String,
     coSupervisor: String,
+    topicStatus: String
 });
 
-const group = mongoose.model('staffDetails', groupSchema);
+const group = mongoose.model('group', groupSchema);
 
 export default group;
