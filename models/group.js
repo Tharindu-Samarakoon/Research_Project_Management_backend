@@ -8,6 +8,6 @@ const groupSchema = mongoose.Schema({
     topicStatus: String
 });
 
-const group = mongoose.model('staffDetails', groupSchema);
+const group = mongoose.model('group', groupSchema);
 
 export default group;

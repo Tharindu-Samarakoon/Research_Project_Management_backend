@@ -1,4 +1,4 @@
-import StudentDetails from "../models/studentDetails.js";
+import StudentDetails, { validate } from "../models/studentDetails.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -16,26 +16,34 @@ export const getStudnet = async (req, res) => {
         }
 }
 
+
+
 export const addStudent = async (req, res) => {
 
     try {
-        const user = await StudentDetails.findOne({email: req.body.email});
 
-        if(user) {
+        console.log('hello');
+        const user1 = await StudentDetails.findOne({email: req.body.email});
+
+        if(user1) {
             return res.status(409).json({message: 'A user with the email already exists'});
         }
         
         const salt = await bcrypt.genSalt(Number(process.env.SALT));
         const hashPassword = await bcrypt.hash( req.body.password, salt);
-        const {firstName, lastName, dateOfBirth, email, password, profilePicture, contactNumber} = {...req.body, password: hashPassword};
-        const newStudent = new StudentDetails({firstName, lastName, dateOfBirth, email, password, profilePicture, contactNumber});
+        const {firstName, lastName, dateOfBirth, email, password, profilePicture, contactNum, regNumber} = {...req.body, password: hashPassword};
+        const user = new StudentDetails({firstName, lastName, dateOfBirth, email, password, profilePicture, contactNum, regNumber, group: ''});
         
-        await newStudent.save();
+        validate(user);
+        
+        await user.save();
 
-        res.status(201).json(newStudent);
+        const token = user.generateAuthToken();
+
+        res.status(201).json({token, user});
 
     } catch (error) {
-
+        console.log(error);
         res.status(409).json({ message: error.message });
 
     }
@@ -59,20 +67,18 @@ export const studentAuthentication = async (req, res) => {
         }
         console.log(user);
         const token = user.generateAuthToken();
-        res.status(200).json({data:token, messaged:'Logged In Successfully'});
+        res.status(200).json({data:token, messaged:'Logged In Successfully', user});
 
     } catch (error) {
         res.status(401).json({message: error.message});
     }
 }
 
-export const setGroup = async (req, res) => {
+export const setGroup = async (studentID, groupID) => {
     try {
-        const {groupID, studentID} = req.body;
         const student = await StudentDetails.findOneAndUpdate(studentID, {group: groupID}, {new: true});
-        res.status(201).json(student);
     } catch(error) {
-        res.status(409).json({message: error.message});
+        console.log(error);
     }
 }
 
@@ -83,23 +89,5 @@ export const getStudentsOfGroup = async (req, res) => {
         res.status(200).json(students);
     } catch(error) {
         res.status(404).json({message: error.message});
-    }
-}
-
-
-export const getStudentToken = async (req, res, next) => {
-    const token = req.header('auth-token');
-    if(!token) {
-        return res.status(401).send('Access Denied');
-    }
-
-    try {
-        const verfied = jwt.verify(token, process.env.JWT_SECRET);
-        req.student = verfied;
-        const studnetDetails = StudentDetails.
-
-        next();
-    } catch (error) {
-        res.status(400).send('Invalid Token');
     }
 }
