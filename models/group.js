@@ -5,7 +5,14 @@ const groupSchema = mongoose.Schema({
     topic: String,
     supervisor: String,
     coSupervisor: String,
-    topicStatus: String
+    topicStatus: String,
+    submissions: [
+        {
+            for: String, //Submission ID
+            uploaded: String, //File
+            uploadDate: Date //Uploaded Date
+        }
+    ]
 });
 
 const group = mongoose.model('group', groupSchema);

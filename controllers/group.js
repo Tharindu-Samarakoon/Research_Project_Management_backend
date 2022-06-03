@@ -154,8 +154,6 @@ export const verifyGroupList = async (req, res) => {
                 }
             )
         )
-        
-        console.log(memberDetails);
         res.status(200).json(memberDetails);
 
     } catch (error) {
