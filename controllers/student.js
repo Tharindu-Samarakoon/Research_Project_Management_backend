@@ -6,8 +6,6 @@ export const getStudnet = async (req, res) => {
         try{
             const studentDetails = await StudentDetails.find();
 
-            console.log(studentDetails);
-
             res.status(200).json(studentDetails);
 
         }catch (error) {
@@ -41,6 +39,31 @@ export const addStudent = async (req, res) => {
         const token = user.generateAuthToken();
 
         res.status(201).json({token, user});
+
+    } catch (error) {
+        console.log(error);
+        res.status(409).json({ message: error.message });
+
+    }
+
+}
+
+export const updateStudentDetails = async (req, res) => {
+    const {id} = req.params;
+
+    try {
+
+        console.log('hello');
+        const user1 = await StudentDetails.findOne({email: req.body.email});
+        
+        const {firstName, lastName, dateOfBirth, email, password, profilePicture, contactNum, regNumber, group} = req.body;
+        const user = {firstName, lastName, dateOfBirth, email, password, profilePicture, contactNum, regNumber, group, _id: id};
+        
+        validate(user);
+        
+        await StudentDetails.findByIdAndUpdate(id, user, {new: true});
+
+        res.status(201).json( user);
 
     } catch (error) {
         console.log(error);

@@ -20,7 +20,6 @@ export const addGroup = async (req, res) => {
         await members.forEach(async (student) => {
             console.log(student);
             const studentNew = await StudentDetails.findOneAndUpdate({email: student}, {group: newGroup._id}, {new: true});
-            console.log(studentNew);
         })
 
         res.status(201).json(newGroup)
@@ -129,8 +128,6 @@ export const acceptTopicCoSupervisor = async (req, res) => {
 
 export const verifyGroupList = async (req, res) => {
     const groupMembers = req.body;
-
-    console.log(groupMembers);
 
     try {
         const member = [];
