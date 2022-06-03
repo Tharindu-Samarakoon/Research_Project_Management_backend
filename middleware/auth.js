@@ -1,4 +1,4 @@
-import StudentDetails from "../models/studentDetails";
+import StudentDetails from "../models/studentDetails.js";
 import jwt from 'jsonwebtoken';
 
 
@@ -11,7 +11,6 @@ export const getStudentToken = async (req, res, next) => {
     try {
         const verfied = jwt.verify(token, process.env.JWT_SECRET);
         req.student = verfied;
-
         next();
     } catch (error) {
         res.status(400).send('Invalid Token');

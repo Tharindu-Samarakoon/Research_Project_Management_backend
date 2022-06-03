@@ -30,6 +30,18 @@ export const addGroup = async (req, res) => {
     }
 }
 
+export const getGroupDetails = async (req, res) => {
+
+    try {
+        const {id} = req.params;
+        const groupDetails = await group.findById(id);
+        res.status(200).json(groupDetails);
+    } catch (error) {
+        res.status(409).json(error);
+    }
+}
+
+
 export const getAllStudentsOfGroup = async (req, res) => {
 
     try {
@@ -44,15 +56,31 @@ export const getAllStudentsOfGroup = async (req, res) => {
 }
 
 export const submitTopic = async (req, res) => {
-    const groupID = req.params;
-    const {supervisor, topic} = req.body;
+    const {id} = req.params;
+    const {topic} = req.body;
+    console.log(id);
 
     try {
-        if(!mongoose.Types.ObjectId.isValid(groupID)) {
+        if(!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(404).send('No group with the given ID');
         }
-        const updatedGroup = await group.findByIdAndUpdate(groupID, {topic: topic, supervisor: supervisor, topicStatus: 'submitted'}, {new: true});
-    
+        const updatedGroup = await group.findByIdAndUpdate(id, {topic: topic, topicStatus: 'topicSubmitted'}, {new: true});
+        res.status(200).json(updatedGroup);
+    } catch (error) {
+        res.status(409).json({message: error.message});
+    }
+}
+
+export const requestSupervisor = async (req, res) => {
+    const {id} = req.params;
+    const {supervisor} = req.body;
+    console.log(id + supervisor);
+
+    try {
+        if(!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).send('No group with the given ID');
+        }
+        const updatedGroup = await group.findByIdAndUpdate(id, {topicStatus: 'submitted', supervisor: supervisor}, {new: true});
         res.status(200).json(updatedGroup);
     } catch (error) {
         res.status(409).json({message: error.message});
@@ -140,7 +168,7 @@ export const verifyGroupList = async (req, res) => {
 //=================================================================================
 // Topic status :
 //     'none' - when group is created
-//     'submited' - when topic is submitted to supervisor
+//     'submitted' - when topic is submitted to supervisor
 //     'accepted' - when topic is accepted by supervisor
 //     'denied' - when topic is denied by supervisor
 //     'coSupervisor' - when request is sent to coSupervisor

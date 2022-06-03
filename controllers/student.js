@@ -65,7 +65,6 @@ export const studentAuthentication = async (req, res) => {
         if(!validPassword){
             return res.status(401).json({message:'Invalid Email or Password'});
         }
-        console.log(user);
         const token = user.generateAuthToken();
         res.status(200).json({data:token, messaged:'Logged In Successfully', user});
 
