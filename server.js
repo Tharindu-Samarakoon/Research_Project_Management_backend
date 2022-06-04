@@ -23,6 +23,7 @@ app.use('/student', studentRoutes);
 app.use('/staff', staffRoutes);
 app.use('/studentGroups', studentGroupRoutes);
 
+
 mongoose.connect(uri, {useNewUrlParser:true, useUnifiedTopology:true});
 mongoose.connection.once('open', ()=> {
     console.log("MongoDB Connected");

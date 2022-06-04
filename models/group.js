@@ -11,3 +11,6 @@ const groupSchema = mongoose.Schema({
 const group = mongoose.model('group', groupSchema);
 
 export default group;
+
+
+// add 4 students

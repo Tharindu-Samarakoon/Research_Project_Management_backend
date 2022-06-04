@@ -9,9 +9,8 @@ const staffSchema = mongoose.Schema({
     email: String,
     password: String,
     department: String,
-    position: String,
-    research_interest: String,
-    userType: String
+    role: String,
+    research_interest: String
 });
 
 staffSchema.methods.generateAuthToken = function() {
