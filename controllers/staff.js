@@ -31,7 +31,7 @@ export const getStaff = async (req, res) => {
 
 export const updateStaff = async (req,res) =>{
     const {id} = req.params;
-    const {firstName, lastName, profilePicture, email, password, department,role, research_interest,userType} = req.body;
+    const {firstName, lastName, profilePicture, email, password, department,role, research_interest} = req.body;
 
 
     if(!mongoose.Types.ObjectId.isValid(id)){

@@ -7,10 +7,11 @@ const studentSchema = mongoose.Schema({
     lastName: String,
     dateOfBirth: Date,
     email: String,
+    regNumber: String,
     password: String,
     profilePicture: String,
     group: String,
-    contactNumber: String
+    contactNum: String
 });
 
 studentSchema.methods.generateAuthToken = function() {

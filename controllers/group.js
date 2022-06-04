@@ -1,15 +1,31 @@
 import mongoose from "mongoose";
 import group from "../models/group.js";
+import StudentDetails from "../models/studentDetails.js";
+import { setGroup } from "./student.js";
+
 
 export const addGroup = async (req, res) => {
-    const {leader, topic, supervisor, coSupervisor} = req.body;
+    const {leader, topic, supervisor, coSupervisor} = req.body.group;
+    const members = req.body.members; 
+    // const {leader, topic, supervisor, coSupervisor, topicStatus} = req.body;
     const topicStatus = 'none';
-
+    console.log(members);
+    members.push(leader);
     try {
         const newGroup = new group({leader, topic, supervisor, coSupervisor, topicStatus});
-        await newGroup.save();
-        res.status(201).json({data:newGroup._id});
+        const ans = await newGroup.save();
+
+        console.log(newGroup);
+        
+        await members.forEach(async (student) => {
+            console.log(student);
+            const studentNew = await StudentDetails.findOneAndUpdate({email: student}, {group: newGroup._id}, {new: true});
+            console.log(studentNew);
+        })
+
+        res.status(201).json(newGroup)
     } catch (error) {
+        console.log(error);
         res.status(409).json({message: error.message});
     }
 }
@@ -78,6 +94,43 @@ export const acceptTopicCoSupervisor = async (req, res) => {
     } catch (error) {
         res.status(409).json({message: error.message});
     }
+}
+
+export const verifyGroupList = async (req, res) => {
+    const groupMembers = req.body;
+
+    console.log(groupMembers);
+
+    try {
+        const member = [];
+        const memberDetails = [];
+        var st;
+        var group;
+    
+        member.push(groupMembers.member1);
+        member.push(groupMembers.member2);
+        member.push(groupMembers.member3);
+    
+        await Promise.all(
+            member.map(
+                async (id) => {
+                    console.log(id);
+                    st = await StudentDetails.findOne({email: id});
+                    if(st.group) {
+                        group = 'yes';
+                    }
+                    memberDetails.push(st);
+                }
+            )
+        )
+        
+        console.log(memberDetails);
+        res.status(200).json(memberDetails);
+
+    } catch (error) {
+        res.status(409).json(error);
+    }
+
 }
 
 
