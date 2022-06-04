@@ -30,6 +30,19 @@ export const addGroup = async (req, res) => {
     }
 }
 
+export const getAllStudentsOfGroup = async (req, res) => {
+
+    try {
+        const groupID = req.params;
+        console.log(groupID);
+        const students = await StudentDetails.find({ group: groupID.id });
+        // const groupDetails = await group.findOne(groupID);
+        res.status(200).json({students});
+    } catch (error) {
+        res.status(409).json(error);
+    }
+}
+
 export const submitTopic = async (req, res) => {
     const groupID = req.params;
     const {supervisor, topic} = req.body;
