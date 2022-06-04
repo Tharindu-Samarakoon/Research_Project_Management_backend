@@ -50,6 +50,7 @@ export const updateMarkingScheme = async (req, res) => {
   res.json(updateMarkingScheme);
 };
 
+//delete marking scheme
 export const deleteMarkingScheme = async(req,res)=>{
     const{id}=req.params;
     if(!mongoose.Types.ObjectId.isValid(id)){
