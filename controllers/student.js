@@ -1,5 +1,6 @@
-import StudentDetails from "../models/studentDetails.js";
+import StudentDetails, { validate } from "../models/studentDetails.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const getStudnet = async (req, res) => {
   try {
@@ -18,10 +19,50 @@ export const addStudent = async (req, res) => {
   try {
     const user = await StudentDetails.findOne({ email: req.body.email });
 
-    if (user) {
-      return res
-        .status(409)
-        .json({ message: "A user with the email already exists" });
+    try {
+      console.log("hello");
+      const user1 = await StudentDetails.findOne({ email: req.body.email });
+
+      if (user1) {
+        return res
+          .status(409)
+          .json({ message: "A user with the email already exists" });
+      }
+
+      const salt = await bcrypt.genSalt(Number(process.env.SALT));
+      const hashPassword = await bcrypt.hash(req.body.password, salt);
+      const {
+        firstName,
+        lastName,
+        dateOfBirth,
+        email,
+        password,
+        profilePicture,
+        contactNum,
+        regNumber,
+      } = { ...req.body, password: hashPassword };
+      const user = new StudentDetails({
+        firstName,
+        lastName,
+        dateOfBirth,
+        email,
+        password,
+        profilePicture,
+        contactNum,
+        regNumber,
+        group: "",
+      });
+
+      validate(user);
+
+      await user.save();
+
+      const token = user.generateAuthToken();
+
+      res.status(201).json({ token, user });
+    } catch (error) {
+      console.log(error);
+      res.status(409).json({ message: error.message });
     }
 
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
@@ -69,10 +110,32 @@ export const studentAuthentication = async (req, res) => {
     }
     console.log(user);
     const token = user.generateAuthToken();
-    res.status(200).json({ data: token, messaged: "Logged In Successfully" });
+    res
+      .status(200)
+      .json({ data: token, messaged: "Logged In Successfully", user });
   } catch (error) {
     res.status(401).json({ message: error.message });
   }
 };
 
-export const getStudentToken = () => {};
+export const setGroup = async (studentID, groupID) => {
+  try {
+    const student = await StudentDetails.findOneAndUpdate(
+      studentID,
+      { group: groupID },
+      { new: true }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getStudentsOfGroup = async (req, res) => {
+  try {
+    const { groupID } = req.params;
+    const students = await StudentDetails.find({ group: groupID });
+    res.status(200).json(students);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};

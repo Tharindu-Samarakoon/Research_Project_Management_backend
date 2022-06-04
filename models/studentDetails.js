@@ -3,13 +3,15 @@ import jwt from "jsonwebtoken";
 import Joi from "joi";
 
 const studentSchema = mongoose.Schema({
-  firstName: String,
-  lastName: String,
-  dateOfBirth: Date,
-  email: String,
-  password: String,
-  profilePicture: String,
-  group: String,
+    firstName: String,
+    lastName: String,
+    dateOfBirth: Date,
+    email: String,
+    regNumber: String,
+    password: String,
+    profilePicture: String,
+    group: String,
+    contactNum: String
 });
 
 studentSchema.methods.generateAuthToken = function () {

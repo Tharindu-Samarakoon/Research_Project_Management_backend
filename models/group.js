@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 
 const groupSchema = mongoose.Schema({
-  leader: String,
-  topic: String,
-  supervisor: String,
-  coSupervisor: String,
+    leader: String,
+    topic: String,
+    supervisor: String,
+    coSupervisor: String,
+    topicStatus: String
 });
 
-const group = mongoose.model("staffDetails", groupSchema);
+const group = mongoose.model('group', groupSchema);
 
 export default group;
