@@ -40,6 +40,16 @@ export const getGroupDetails = async (req, res) => {
     }
 }
 
+export const getGroup = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const selectGroup = await group.findById(id);
+        res.status(200).json(selectGroup);
+    } catch (error) {
+        res.status(404).json({message: error.message});
+    }
+}
+
 
 export const getAllStudentsOfGroup = async (req, res) => {
 
@@ -51,6 +61,27 @@ export const getAllStudentsOfGroup = async (req, res) => {
         res.status(200).json({students});
     } catch (error) {
         res.status(409).json(error);
+    }
+}
+
+export const getGroups = async (req,res) =>{
+    const {} =req.params;
+    try{
+        const selectGroups = await group.find({topicStatus:'submitted'});
+        res.status(200).json(selectGroups);
+    } catch (error){
+        res.status(404).json({message: error.message});
+    }
+}
+
+
+export const getGroupsCoSupervisor = async (req,res) =>{
+    const {} =req.params;
+    try{
+        const selectGroups = await group.find({topicStatus:'coSupervisor'});
+        res.status(200).json(selectGroups);
+    } catch (error){
+        res.status(404).json({message: error.message});
     }
 }
 
@@ -87,12 +118,25 @@ export const requestSupervisor = async (req, res) => {
 }
 
 export const acceptTopic = async (req, res) => {
-    const groupID = req.params;
+    const {id} = req.params;
     try {
-        if(!mongoose.Types.ObjectId.isValid(groupID)) {
+        if(!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(404).send('No Group with the given ID');
         }
-        const updatedGroup = await group.findByIdAndUpdate(groupID, {topicStatus: 'accepted'});
+        const updatedGroup = await group.findByIdAndUpdate(id, {topicStatus: 'accepted'});
+        res.status(200).json(updatedGroup);
+    } catch (error) {
+        res.status(409).json({message: error.message});
+    }
+}
+
+export const deniedTopic = async (req, res) => {
+    const {id} = req.params;
+    try {
+        if(!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).send('No Group with the given ID');
+        }
+        const updatedGroup = await group.findByIdAndUpdate(id, {topicStatus: 'denied'});
         res.status(200).json(updatedGroup);
     } catch (error) {
         res.status(409).json({message: error.message});
