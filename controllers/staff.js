@@ -7,7 +7,6 @@ export const getStaff = async (req, res) => {
         try{
             const staffDetails = await StaffDetails.find();
 
-            console.log(staffDetails);
 
             res.status(200).json(staffDetails);
 
@@ -21,6 +20,15 @@ export const getStaff = async (req, res) => {
 export const getSupervisors = async ( req, res) => {
     try {
         const supervisors = await StaffDetails.find({role: 'supervisor'});
+        res.status(200).json(supervisors);
+    } catch (error) {
+        res.status(404).json(error);
+    }
+}
+
+export const getCoSupervisors = async ( req, res) => {
+    try {
+        const supervisors = await StaffDetails.find({role: 'coSupervisor'});
         res.status(200).json(supervisors);
     } catch (error) {
         res.status(404).json(error);

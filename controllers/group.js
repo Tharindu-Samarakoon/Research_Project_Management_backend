@@ -100,13 +100,13 @@ export const acceptTopic = async (req, res) => {
 }
 
 export const addCoSupervisor = async (req, res) => {
-    const groupID = req.params;
+    const {id} = req.params;
     const {coSupervisor} = req.body;
     try {
-        if(!mongoose.Types.ObjectId.isValid(groupID)) {
+        if(!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(404).send('No Group with the given ID');
         }
-        const updatedGroup = await group.findByIdAndUpdate(groupID, {coSupervisor: coSupervisor, topicStatus: 'coSupervisor'});
+        const updatedGroup = await group.findByIdAndUpdate(id, {coSupervisor: coSupervisor, topicStatus: 'coSupervisor'});
         res.status(200).json(updatedGroup);
     } catch (error) {
         res.status(409).json({message: error.message});
@@ -157,6 +157,17 @@ export const verifyGroupList = async (req, res) => {
         res.status(409).json(error);
     }
 
+}
+
+export const testSample = (num1, num2) => {
+
+    if(num1 < 0 || num2 < 0){
+        return 'negative Numbers'
+    }
+
+    let ans = num1 + num2;
+
+    return ans;
 }
 
 
